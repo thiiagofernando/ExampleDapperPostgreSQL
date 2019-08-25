@@ -1,5 +1,4 @@
 ﻿using Dapper.Contrib.Extensions;
-using ExampleDapperPostgreSQL.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 using System.Collections.Generic;
@@ -13,11 +12,11 @@ namespace ExampleDapperPostgreSQL.Models
         {
             _configuration = config;
         }
-        public IEnumerable<PersonViewModel> ListPersonAll()
+        public IEnumerable<Person> ListPersonAll()
         {
             using (NpgsqlConnection connection = new NpgsqlConnection(_configuration.GetConnectionString("PersonBase")))
             {
-                return connection.GetAll<PersonViewModel>();
+                return connection.GetAll<Person>();
             }
         }
     }

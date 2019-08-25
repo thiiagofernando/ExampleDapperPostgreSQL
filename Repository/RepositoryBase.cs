@@ -1,14 +1,16 @@
-﻿using Dapper.Contrib.Extensions;
+﻿using Dapper;
+using Dapper.Contrib.Extensions;
 using ExampleDapperPostgreSQL.Contracts;
 using ExampleDapperPostgreSQL.Models;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace ExampleDapperPostgreSQL.Repository
 {
-    public class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : BaseEntity
+    public class RepositoryBase : IRepositoryBase<Person>
     {
         protected readonly IConfiguration _ConnectionString;
 
@@ -16,9 +18,10 @@ namespace ExampleDapperPostgreSQL.Repository
         {
             _ConnectionString = config;
         }
-        
-        public NpgsqlConnection GetConnection()
+
+        public  IDbConnection GetConnection()
         {
+
             NpgsqlConnection connection = new NpgsqlConnection(_ConnectionString.GetConnectionString("PersonBase"));
             return connection;
         }
@@ -41,21 +44,21 @@ namespace ExampleDapperPostgreSQL.Repository
             }
         }
 
-        public IEnumerable<TEntity> GetAll()
+        public IEnumerable<Person> GetAll()
         {
             using (var db = GetConnection())
             {
-                return db.GetAll<TEntity>();
+                return db.GetAll<Person>();
             }
         }
 
-        public TEntity GetById(int id)
+        public Person GetById(int id)
         {
             try
             {
                 using (var db = GetConnection())
                 {
-                    return db.Get<TEntity>(id);
+                    return db.Get<Person>(id);
                 }
             }
             catch (Exception)
@@ -65,29 +68,29 @@ namespace ExampleDapperPostgreSQL.Repository
             }
         }
 
-        public void Insert(ref TEntity entity)
+        public void Insert(Person person)
         {
             try
             {
-                using (var db = GetConnection())
+                using (IDbConnection db = GetConnection())
                 {
-                     db.Insert(entity);
+                    db.Insert<Person>(person);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                var men = ex.Message;
                 throw;
             }
         }
 
-        public bool Update(TEntity entity)
+        public bool Update(Person person)
         {
             try
             {
                 using (var db = GetConnection())
                 {
-                    return db.Update(entity);
+                    return db.Update(person);
                 }
             }
             catch (Exception)

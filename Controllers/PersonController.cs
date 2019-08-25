@@ -1,6 +1,5 @@
 ﻿using ExampleDapperPostgreSQL.Models;
 using ExampleDapperPostgreSQL.Repository;
-using ExampleDapperPostgreSQL.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
@@ -10,11 +9,11 @@ namespace ExampleDapperPostgreSQL.Controllers
     public class PersonController : Controller
     {
         private IConfiguration _configuration;
-        RepositoryBase<PersonViewModel> repo;
+        RepositoryBase repo;
         public PersonController(IConfiguration config)
         {
             _configuration = config;
-            repo = new RepositoryBase<PersonViewModel>(_configuration);
+            repo = new RepositoryBase(_configuration);
         }
         [HttpGet]
         public IActionResult Index()
@@ -29,9 +28,18 @@ namespace ExampleDapperPostgreSQL.Controllers
         }
 
         [HttpPost]
-        public IActionResult NewPerson(PersonViewModel person)
+        [ValidateAntiForgeryToken]
+        public IActionResult NewPerson(Person person)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                repo.Insert(person);
+                return RedirectToAction("Index","Person");
+            }
+            else
+            {
+                return View();
+            }
         }
 
     }

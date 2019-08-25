@@ -1,16 +1,15 @@
 ﻿using ExampleDapperPostgreSQL.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 
 namespace ExampleDapperPostgreSQL.Contracts
 {
-    public interface IRepositoryBase<TEntity> where TEntity : BaseEntity
+    public interface IRepositoryBase<T> where T : Person
     {
-        IEnumerable<TEntity> GetAll();
-        TEntity GetById(int id);
-        void Insert(ref TEntity entity);
-        bool Update(TEntity entity);
+        IEnumerable<T> GetAll();
+        T GetById(int id);
+        void Insert(T entity);
+        bool Update(T entity);
         bool Delete(Int32 id);
     }
 }
