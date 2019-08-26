@@ -7,7 +7,7 @@ namespace ExampleDapperPostgreSQL.Models
     public class Person
     {
         [Key]
-        public int Id { get; set; }
+        public int id { get; set; }
         [Display(Name = "Nome")]
         [DataType(DataType.Text)]
         [Required(ErrorMessage = "Informe o E-mail"), MaxLength(200)]

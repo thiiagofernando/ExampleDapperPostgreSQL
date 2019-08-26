@@ -42,5 +42,24 @@ namespace ExampleDapperPostgreSQL.Controllers
             }
         }
 
+        public IActionResult RemovePerson(int id)
+        {
+            repo.Delete(id);
+            return RedirectToAction("Index", "Person");
+        }
+
+        public IActionResult UpdatePerson(int id)
+        {
+            Person person = repo.GetById(id);
+
+            return View(person);
+        }
+        [HttpPost]
+        public IActionResult UpdatePerson(Person person)
+        {
+            repo.Update(person);
+            return RedirectToAction("Index", "Person");
+        }
+
     }
 }
